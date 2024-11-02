@@ -1,0 +1,23 @@
+cookie:
+  expiry_days: 0
+  key: spade
+  name: spade
+credentials:
+  usernames:
+    pratham:
+      email: pratham001@gmail.com
+      first_name: pratham
+      last_name: rao
+      logged_in: false
+      password: $2b$12$2iMtJW7WILW3CZfFAIvJ2.lnjyQFFIfR/FZCuDdgBErItn21T/Omi
+      password_hint: retard
+      roles: null
+    rahul:
+      email: rahul.j.jacob@gmail.com
+      failed_login_attempts: 0
+      first_name: Rahul
+      last_name: Jacob
+      logged_in: false
+      password: $2b$12$xgrs7yjl1IP0p3rCsbNNtO0gSA65ubRikCct/.Wz0z.8AlDU.Sasy
+pre-authorized:
+  emails: null
