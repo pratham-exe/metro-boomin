@@ -1,2 +1,4 @@
 project-venv/
 metro/
+setup.cfg
+metro.db
