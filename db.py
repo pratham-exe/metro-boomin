@@ -136,7 +136,7 @@ trains = [
     ("train_015", "route_005", "schedule_6"),
     ("train_016", "route_002", "schedule_8"),
     ("train_017", "route_008", "schedule_5"),
-    ("train_018", "route_003", "schedule_4"),
+    ("train_018", "route_003", "schedule_8"),
     ("train_019", "route_002", "schedule_4"),
     ("train_020", "route_004", "schedule_2")
 ]

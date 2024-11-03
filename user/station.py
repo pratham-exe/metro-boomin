@@ -13,4 +13,7 @@ for route in routes:
     if station_id_option in station_ids_for_route:
         train_route = conn.query(f"SELECT train_id, schedule_id FROM train WHERE route_id = '{route}'")
         train_id = train_route['train_id'].values
-        st.write(train_id)
+        schedule_id = train_route['schedule_id'].values
+        for i in range(len(schedule_id)):
+            schedule_time = conn.query(f"SELECT time_stamp FROM schedule WHERE schedule_id = '{schedule_id[i]}'")['time_stamp'].values[0]
+            st.write(f"{train_id[i]} - {schedule_time}")
