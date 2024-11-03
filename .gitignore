@@ -2,4 +2,4 @@ project-venv/
 metro/
 setup.cfg
 metro.db
-.streamlit/
+outline
