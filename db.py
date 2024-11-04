@@ -154,7 +154,7 @@ cur.executemany("INSERT INTO train VALUES (?, ?, ?)", trains)
 
 cur.execute("CREATE TABLE IF NOT EXISTS ticket(ticket_id, source, destination, price)")
 
-cur.execute("CREATE TABLE IF NOT EXISTS user(user_id, user_name, age, gender, tickets)")
+cur.execute("CREATE TABLE IF NOT EXISTS user(user_id TEXT PRIMARY KEY, user_name TEXT NOT NULL, tickets TEXT)")
 
 conn.commit()
 conn.close()

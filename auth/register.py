@@ -1,10 +1,15 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 import yaml
+from sqlalchemy import text
 from yaml.loader import SafeLoader
+
+conn = st.connection("metro.db", type="sql", url="sqlite:///./metro.db")
 
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
+
+query = text("INSERT INTO user (user_id, user_name) VALUES (:user_id, :user_name);")
 
 authenticator = stauth.Authenticate(
     config['credentials'],
@@ -16,6 +21,12 @@ try:
     if email_of_registered_user:
         st.success('User registered successfully')
         st.session_state.logged_in = True
+        with conn.session as session:
+            session.execute(query, {
+                'user_id': username_of_registered_user,
+                'user_name': name_of_registered_user
+            })
+            session.commit()
         with open('config.yaml', 'w') as file:
             yaml.dump(config, file, default_flow_style=False)
 except Exception as e:
