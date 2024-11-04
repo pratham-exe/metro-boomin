@@ -3,7 +3,7 @@ import streamlit as st
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-st.title("OUR METRO")
+st.title("NIMMA METRO")
 
 login_page = st.Page("auth/login.py", title="Log in", icon=":material/login:")
 register_page = st.Page("auth/register.py", title="Register", icon=":material/login:")

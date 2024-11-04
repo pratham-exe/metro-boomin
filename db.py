@@ -152,9 +152,11 @@ cur.executemany("INSERT INTO schedule VALUES (?, ?)", schedules)
 cur.execute("CREATE TABLE IF NOT EXISTS train(train_id TEXT PRIMARY KEY, route_id TEXT, schedule_id TEXT, FOREIGN KEY (route_id) REFERENCES route (route_id), FOREIGN KEY (schedule_id) REFERENCES schedule (schedule_id))")
 cur.executemany("INSERT INTO train VALUES (?, ?, ?)", trains)
 
-cur.execute("CREATE TABLE IF NOT EXISTS ticket(ticket_id, source, destination, price)")
+cur.execute("CREATE TABLE IF NOT EXISTS ticket(ticket_id TEXT PRIMARY KEY, source TEXT, destination TEXT, price INTEGER)")
 
 cur.execute("CREATE TABLE IF NOT EXISTS user(user_id TEXT PRIMARY KEY, user_name TEXT NOT NULL, tickets TEXT)")
+cur.execute("INSERT INTO user (user_id, user_name) VALUES ('pratham', 'Pratham Rao')")
+cur.execute("INSERT INTO user (user_id, user_name) VALUES ('rahul', 'Rahul Jacob')")
 
 conn.commit()
 conn.close()
