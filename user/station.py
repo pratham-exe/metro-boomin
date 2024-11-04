@@ -24,7 +24,8 @@ for route in routes:
             with st.expander(f"{train_id[i]}"):
                 while(cur_time < endtime):
                     station_name = conn.query(f"SELECT station_name FROM station WHERE station_id = '{station_ids_for_route[position]}'")['station_name'].values[0]
-                    st.write(f"{station_name} - {cur_time.strftime("%H:%M")}")
+                    if(station_name == option):
+                        st.write(f"{station_name} - {cur_time.strftime("%H:%M")}")
                     cur_time = cur_time + timedelta(minutes=20)
                     position += direction
                     if position == len(station_ids_for_route) - 1:

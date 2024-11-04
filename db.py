@@ -74,7 +74,6 @@ stations = [
     ("st_068", "Doddaballapura"),
     ("st_069", "Peenya"),
     ("st_070", "Chikkajala"),
-    ("st_071", "Nagarbhavi"),
     ("st_072", "Anjanapura"),
     ("st_073", "Basavanagudi"),
     ("st_074", "RT Nagar"),
