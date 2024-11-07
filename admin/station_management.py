@@ -20,4 +20,3 @@ if st.button("Create"):
         })
         st.write(f"Station {station_name} created with Station ID {next_station_id}")
         session.commit()
-        print(conn.query("SELECT * FROM station"))
