@@ -6,6 +6,9 @@ from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
+
+conn = st.connection("metro.db", type="sql", url="sqlite:///./metro.db")
+
 authenticator = stauth.Authenticate(
     config['credentials'],
     config['cookie']['expiry_days']
@@ -14,7 +17,13 @@ authenticator = stauth.Authenticate(
 try:
     authenticator.login()
     if st.session_state['authentication_status']:
+        user_privilege = conn.query(f"SELECT admin FROM user WHERE user_id = '{st.session_state['username']}'")['admin'][0]
         st.success("User logged in successfully")
         st.session_state.logged_in = True
+        if user_privilege == 'False':
+            st.session_state.admin = False
+        else:
+            st.session_state.admin = True
+
 except Exception as e:
     st.error(e)

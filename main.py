@@ -12,9 +12,13 @@ dashboard_page = st.Page("user/dashboard.py", title="Dashboard", icon=":material
 routes_page = st.Page("user/routes.py", title="Routes")
 station_page = st.Page("user/station.py", title="Station")
 ticket_page = st.Page("user/ticket.py", title="Ticket")
+station_management = st.Page("admin/station_management.py", title="Station Management")
 
 if st.session_state.logged_in:
-    pg = st.navigation({"Account": [logout_page, dashboard_page, routes_page, station_page, ticket_page]})
+    if st.session_state.admin == False:
+        pg = st.navigation({"Account": [logout_page, dashboard_page, routes_page, station_page, ticket_page]})
+    else:
+        pg = st.navigation({"Account": [logout_page, dashboard_page, station_management]})
 else:
     pg = st.navigation({"Authorize": [login_page, register_page]})
 pg.run()

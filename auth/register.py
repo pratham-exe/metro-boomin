@@ -24,7 +24,8 @@ try:
         with conn.session as session:
             session.execute(query, {
                 'user_id': username_of_registered_user,
-                'user_name': name_of_registered_user
+                'user_name': name_of_registered_user,
+                'admin' : 'False'
             })
             session.commit()
         with open('config.yaml', 'w') as file:
