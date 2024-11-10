@@ -3,3 +3,4 @@ metro/
 setup.cfg
 metro.db
 outline
+config.yaml

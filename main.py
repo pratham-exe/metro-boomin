@@ -19,7 +19,7 @@ station_management = st.Page("admin/station_management.py", title="Station Manag
 route_management = st.Page("admin/route_management.py", title="Create or Alter Routes")
 
 if st.session_state.logged_in:
-    if st.session_state.admin == False:
+    if not st.session_state.admin:
         pg = st.navigation({"Account": [logout_page, dashboard_page, routes_page, station_page, ticket_page]})
     else:
         pg = st.navigation({"Account": [logout_page, dashboard_page, station_management]})
