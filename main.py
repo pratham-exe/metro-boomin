@@ -16,13 +16,14 @@ ticket_page = st.Page("user/ticket.py", title="Ticket")
 
 # Admin Pages
 station_management = st.Page("admin/station_management.py", title="Station Management")
-route_management = st.Page("admin/route_management.py", title="Create or Alter Routes")
+route_management = st.Page("admin/route_management.py", title="Route Management")
+schedule_management = st.Page("admin/schedule_management.py", title="Schedule Management")
 
 if st.session_state.logged_in:
     if not st.session_state.admin:
         pg = st.navigation({"Account": [logout_page, dashboard_page, routes_page, station_page, ticket_page]})
     else:
-        pg = st.navigation({"Account": [logout_page, dashboard_page, station_management]})
+        pg = st.navigation({"Account": [logout_page, dashboard_page, station_management, route_management, schedule_management]})
 else:
     pg = st.navigation({"Authorize": [login_page, register_page]})
 pg.run()
