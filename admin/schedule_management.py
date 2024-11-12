@@ -24,15 +24,16 @@ with tabs[0]:
 
 with tabs[1]:
     current_timings = session.execute(text("SELECT schedule_id, time_stamp FROM schedule")).fetchall()
-    with st.expander("Schedules"):
-        for each_schedule, time_stamp in current_timings:
-            col1, col2 = st.columns([4, 1])
-            with col1:
-                st.write(time_stamp)
-            with col2:
-                if st.button("−", key=f"schedule_{each_schedule}"):
-                    session.execute(text("DELETE FROM schedule WHERE schedule_id = :schedule_id"), {
-                        'schedule_id': each_schedule
-                    })
-                    session.commit()
-                    st.rerun()
+    only_current_timings = session.execute(text("SELECT time_stamp FROM schedule")).fetchall()
+    print(current_timings)
+    for each_schedule, time_stamp in current_timings:
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.write(time_stamp)
+        with col2:
+            if st.button("−", key=f"schedule_{each_schedule}"):
+                session.execute(text("DELETE FROM schedule WHERE schedule_id = :schedule_id"), {
+                    'schedule_id': each_schedule
+                })
+                session.commit()
+                st.rerun()
