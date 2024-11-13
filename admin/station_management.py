@@ -39,4 +39,4 @@ with tabs[1]:
             'station_name': delete_station_name
         })
         session.commit()
-        st.success("Deleted successfully")
+        st.success("Removed successfully and station removed from all routes")
