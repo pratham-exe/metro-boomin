@@ -65,63 +65,65 @@ with modify_tab:
                         st.rerun()
 with add_route_tab:
     st.header("Add Route")
-    last_route = session.execute(text("SELECT route_id FROM route ORDER BY route_id DESC LIMIT 1")).fetchone()[0]
-    last_route_no = int(last_route.split("_")[1])
-    next_route = last_route_no + 1
-    next_route_id = f"route_{str(next_route).zfill(3)}"
+    last_route = session.execute(text("SELECT route_id FROM route ORDER BY route_id DESC LIMIT 1")).fetchone()
+    if last_route:
+        last_route = last_route[0]
+        last_route_no = int(last_route.split("_")[1])
+        next_route = last_route_no + 1
+        next_route_id = f"route_{str(next_route).zfill(3)}"
 
-    with st.expander("Stations"):
-        routes = session.execute(text("SELECT route_id FROM route")).fetchall()
-        routes = [route[0] for route in routes]
+        with st.expander("Stations"):
+            routes = session.execute(text("SELECT route_id FROM route")).fetchall()
+            routes = [route[0] for route in routes]
 
-        for route in routes:
-            stations_query = session.execute(text("SELECT station_ids FROM route WHERE route_id = :route"), {
-                "route": route
-            }).fetchone()
-
-            if stations_query:
-                stations = stations_query[0].split(',')
-
-            for station in stations:
-                station_name = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_id"), {
-                    "station_id": station
+            for route in routes:
+                stations_query = session.execute(text("SELECT station_ids FROM route WHERE route_id = :route"), {
+                    "route": route
                 }).fetchone()
-                if station_name is None:
-                    continue
-                else:
-                    station_name = station_name[0]
 
-                col1, col2 = st.columns([4, 1])
-                with col1:
-                    st.write(station_name)
-                with col2:
-                    if st.button("✚", key=f"station_{station_name}route{route}"):
-                        station_id = session.execute(text("SELECT station_id FROM station WHERE station_name = :station_name"), {'station_name': station_name}).fetchone()[0]
-                        if station_id not in st.session_state.station_list:
-                            st.session_state.station_list.append(station_id)
+                if stations_query:
+                    stations = stations_query[0].split(',')
 
-    with st.expander(f"Route {next_route}"):
-        if st.session_state.station_list:
-            for station_id in st.session_state.station_list:
-                station_name = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_id"), {"station_id": station_id}).fetchone()[0]
-                col1, col2 = st.columns([4, 1])
-                with col1:
-                    st.write(f"- {station_name}")
-                with col2:
-                    if st.button("−", key=f"station_{station_name}"):
-                        st.session_state.station_list.remove(station_id)
-                        st.rerun()
+                for station in stations:
+                    station_name = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_id"), {
+                        "station_id": station
+                    }).fetchone()
+                    if station_name is None:
+                        continue
+                    else:
+                        station_name = station_name[0]
 
-    if st.button("Add route"):
-        if st.session_state.station_list:
-            station_list = ",".join(st.session_state.station_list)
-            session.execute(text("INSERT INTO route VALUES (:route_id, :station_ids)"), {
-                'route_id': next_route_id,
-                'station_ids': station_list
-            })
-            session.commit()
-            st.session_state.station_list = []
-            st.rerun()
+                    col1, col2 = st.columns([4, 1])
+                    with col1:
+                        st.write(station_name)
+                    with col2:
+                        if st.button("✚", key=f"station_{station_name}route{route}"):
+                            station_id = session.execute(text("SELECT station_id FROM station WHERE station_name = :station_name"), {'station_name': station_name}).fetchone()[0]
+                            if station_id not in st.session_state.station_list:
+                                st.session_state.station_list.append(station_id)
+
+        with st.expander(f"Route {next_route}"):
+            if st.session_state.station_list:
+                for station_id in st.session_state.station_list:
+                    station_name = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_id"), {"station_id": station_id}).fetchone()[0]
+                    col1, col2 = st.columns([4, 1])
+                    with col1:
+                        st.write(f"- {station_name}")
+                    with col2:
+                        if st.button("−", key=f"station_{station_name}"):
+                            st.session_state.station_list.remove(station_id)
+                            st.rerun()
+
+        if st.button("Add route"):
+            if st.session_state.station_list:
+                station_list = ",".join(st.session_state.station_list)
+                session.execute(text("INSERT INTO route VALUES (:route_id, :station_ids)"), {
+                    'route_id': next_route_id,
+                    'station_ids': station_list
+                })
+                session.commit()
+                st.session_state.station_list = []
+                st.rerun()
 
 with delete_route_tab:
     routes = session.execute(text("SELECT route_id FROM route")).fetchall()

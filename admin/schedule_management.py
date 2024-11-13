@@ -25,7 +25,6 @@ with tabs[0]:
 with tabs[1]:
     current_timings = session.execute(text("SELECT schedule_id, time_stamp FROM schedule")).fetchall()
     only_current_timings = session.execute(text("SELECT time_stamp FROM schedule")).fetchall()
-    print(current_timings)
     for each_schedule, time_stamp in current_timings:
         col1, col2 = st.columns([4, 1])
         with col1:

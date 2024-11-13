@@ -17,53 +17,19 @@ route_dict = {}
 route_dict_reverse = {}
 timestamp_list = []
 
-def get_start_and_end_station_names(route_id):
-    result = session.execute(
-        text("SELECT station_ids FROM route WHERE route_id = :route_id"),
-        {'route_id': route_id}
-    )
-    station_ids = result.scalar()
-
-    if not station_ids:
-        return "Route not found"
-
-    stations = station_ids.split(',')
-    station_start = stations[0]
-    station_end = stations[-1]
-
-    # Get the names of the start and end stations
-    result_start = session.execute(
-        text("SELECT station_name FROM station WHERE station_id = :station_start"),
-        {'station_start': station_start}
-    )
-    station_start_name = result_start.scalar()
-
-    result_end = session.execute(
-        text("SELECT station_name FROM station WHERE station_id = :station_end"),
-        {'station_end': station_end}
-    )
-    station_end_name = result_end.scalar()
-
-    return f"{station_start_name} - {station_end_name} Line"
-
-conn.create_function("get_route_name", 1, get_start_and_end_station_names)
-
 tabs = st.tabs(["Create a New Train", "Delete an existing Train"])
 
 with tabs[0]:
     for route in routes:
-        # result = session.execute(text("SELECT station_ids FROM route WHERE route_id = :route_id"), {'route_id': route})
-        # stations = result.scalar().split(',')
-        # station_start = stations[0]
-        # station_end = stations[-1]
-        # result_start = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_start"), {'station_start': station_start})
-        # station_start_name = result_start.scalar()
-        # result_end = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_end"), {'station_end': station_end})
-        # station_end_name = result_end.scalar()
-        # station_select = f"{station_start_name} - {station_end_name} Line"
-
-        station_select = session.execute(text("SELECT get_route_name(1)")).fetchone()[0]
-        print(station_select)
+        result = session.execute(text("SELECT station_ids FROM route WHERE route_id = :route_id"), {'route_id': route})
+        stations = result.scalar().split(',')
+        station_start = stations[0]
+        station_end = stations[-1]
+        result_start = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_start"), {'station_start': station_start})
+        station_start_name = result_start.scalar()
+        result_end = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_end"), {'station_end': station_end})
+        station_end_name = result_end.scalar()
+        station_select = f"{station_start_name} - {station_end_name} Line"
 
         route_list.append(station_select)
         route_dict[station_select] = route
@@ -84,7 +50,7 @@ with tabs[0]:
         check_train_constraint = session.execute(text(check_query), {"route_id": route_id, "schedule_id": schedule_id}).scalar()
         if check_train_constraint == 0:
             session.execute(text("INSERT INTO train VALUES (:train_id, :route_id, :schedule_id)"), {"train_id": next_train, "route_id": route_id, "schedule_id": schedule_id})
-            st.write("Train added Successfully")
+            st.success("Train added Successfully")
         else:
             st.write("Trains cant have same route and schedule")
         session.commit()

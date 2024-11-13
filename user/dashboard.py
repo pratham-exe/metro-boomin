@@ -18,12 +18,14 @@ def calculate_total_money_spent_by_user(user_name):
     """
     result = session.execute(text(aggregate_query)).fetchone()
     total_spent = result[0] if result else 0
+    if total_spent is None:
+        return 0
     return total_spent
 
 
 total_money_spent_on_metro = calculate_total_money_spent_by_user(username)
 
-st.write(username)
+st.header(username)
 st.write(f"Money spent: {total_money_spent_on_metro}Rs")
 
 with st.expander("Ticket History"):
