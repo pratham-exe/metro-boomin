@@ -8,9 +8,26 @@ users = session.execute(text("SELECT user_name FROM user WHERE admin = :admin"),
     'admin': 'False'
 }).fetchall()
 
+
+def calculate_total_money_spent_by_user(user_name):
+    aggregate_query = f"""
+    SELECT SUM(t.price) AS total_spent
+    FROM ticket t
+    JOIN (
+        SELECT user_id, user_name, tickets
+        FROM user
+        WHERE user_name = '{user_name}'
+    ) u ON ',' || u.tickets || ',' LIKE '%,' || t.ticket_id || ',%';
+    """
+    result = session.execute(text(aggregate_query)).fetchone()
+    total_spent = result[0] if result else 0
+    return total_spent
+
+
 st.header("Users")
 for each_user in users:
-    with st.expander(f"{each_user[0]}"):
+    total_money_spent = calculate_total_money_spent_by_user(each_user[0])
+    with st.expander(f"{each_user[0]}: {total_money_spent}Rs"):
         tickets_list = session.execute(text("SELECT tickets FROM user WHERE user_name = :user_name"), {
             'user_name': each_user[0]
         }).fetchone()[0]

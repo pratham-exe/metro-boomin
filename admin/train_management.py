@@ -56,23 +56,32 @@ with tabs[0]:
         session.commit()
 
 with tabs[1]:
-    trains = session.execute(text("SELECT * FROM train")).all()
+    trains = session.execute(text("""
+        SELECT
+            t.train_id,
+            r.station_ids,
+            sch.time_stamp
+        FROM
+            train t
+        JOIN
+            route r ON t.route_id = r.route_id
+        JOIN
+            schedule sch ON t.schedule_id = sch.schedule_id
+        """)).all()
 
     for item in trains:
         col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.write(item[0])
         with col2:
-            result = session.execute(text("SELECT station_ids FROM route WHERE route_id = :route_id"), {'route_id': item[1]})
-            stations = result.scalar().split(',')
+            stations = item[1].split(',')
             route_start_id = stations[0]
             route_end_id = stations[-1]
             route_start_name = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_start"), {'station_start': route_start_id}).scalar()
             route_end_name = session.execute(text("SELECT station_name FROM station WHERE station_id = :station_end"), {'station_end': route_end_id}).scalar()
             st.write(f"{route_start_name} - {route_end_name}")
         with col3:
-            schedule_id = session.execute(text("SELECT time_stamp FROM schedule WHERE schedule_id = :schedule_id"), {"schedule_id": item[2]}).fetchone()[0]
-            st.write(schedule_id)
+            st.write(item[2])
         with col4:
             if st.button("Remove Train", key=item[0]):
                 st.write("Train Removed")

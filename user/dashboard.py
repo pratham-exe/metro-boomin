@@ -5,7 +5,26 @@ conn = st.connection("metro.db", type="sql", url="sqlite:///./metro.db")
 session = conn.session
 username = st.session_state['name']
 
+
+def calculate_total_money_spent_by_user(user_name):
+    aggregate_query = f"""
+    SELECT SUM(t.price) AS total_spent
+    FROM ticket t
+    JOIN (
+        SELECT user_id, user_name, tickets
+        FROM user
+        WHERE user_name = '{user_name}'
+    ) u ON ',' || u.tickets || ',' LIKE '%,' || t.ticket_id || ',%';
+    """
+    result = session.execute(text(aggregate_query)).fetchone()
+    total_spent = result[0] if result else 0
+    return total_spent
+
+
+total_money_spent_on_metro = calculate_total_money_spent_by_user(username)
+
 st.write(username)
+st.write(f"Money spent: {total_money_spent_on_metro}Rs")
 
 with st.expander("Ticket History"):
     tickets_list = session.execute(text("SELECT tickets FROM user WHERE user_name = :user_name"), {
